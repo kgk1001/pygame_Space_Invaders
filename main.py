@@ -1,5 +1,4 @@
 import pygame
-import random
 
 # initialize pygame
 pygame.init()
@@ -25,6 +24,14 @@ enY = 0
 enChgX = 0.2
 enChgY = 0.25
 
+# bullet
+bulIm = pygame.image.load("bullet.png")
+bulX = 0
+bulY = 580
+bulChgX = 0.2
+bulChgY = 0.5
+bulState = "ready"
+
 
 def player(x, y):
     screen.blit(plyIm, (x, y))
@@ -32,6 +39,12 @@ def player(x, y):
 
 def enemy(x, y):
     screen.blit(enIm, (x, y))
+
+
+def bullet(x, y):
+    # global bulState
+    # bulState = "fire"
+    screen.blit(bulIm, (x + 16, y - 10))
 
 
 # game loop
@@ -54,6 +67,11 @@ while running:
             if event.key == pygame.K_RIGHT:
                 plyChg = 0.2
                 print("right")
+            if event.key == pygame.K_UP:
+                bulState = "fire"
+                bulX = plyX
+                bullet(bulX, bulY)
+
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_RIGHT or event.key == pygame.K_LEFT:
                 plyChg = 0
@@ -72,6 +90,13 @@ while running:
     elif enX > 736:
         enChgX = -0.2
         enY += 32
+    # bullet movement
+    if bulState == "fire":
+        bullet(bulX, bulY)
+        bulY -= bulChgY
+        if (enY <= bulY <= enY + 60 and enX - 22 <= bulX <= enX + 22 ) or bulY <= 0:
+            bulState = "ready"
+            bulY = 580
 
     player(plyX, plyY)
     enemy(enX, enY)

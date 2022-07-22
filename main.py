@@ -107,6 +107,7 @@ while running:
             bulY = 580
 
     player(plyX, plyY)
+    # respawn enemy
     if score == 5:
         enX = 0
         enY = 0

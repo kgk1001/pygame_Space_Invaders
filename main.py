@@ -29,8 +29,9 @@ bulIm = pygame.image.load("bullet.png")
 bulX = 0
 bulY = 580
 bulChgX = 0.2
-bulChgY = 0.5
+bulChgY = 0.511
 bulState = "ready"
+score = 0
 
 
 def player(x, y):
@@ -68,9 +69,10 @@ while running:
                 plyChg = 0.2
                 print("right")
             if event.key == pygame.K_UP:
-                bulState = "fire"
-                bulX = plyX
-                bullet(bulX, bulY)
+                if bulState == "ready":
+                    bulState = "fire"
+                    bulX = plyX
+                    bullet(bulX, bulY)
 
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_RIGHT or event.key == pygame.K_LEFT:
@@ -94,10 +96,20 @@ while running:
     if bulState == "fire":
         bullet(bulX, bulY)
         bulY -= bulChgY
-        if (enY <= bulY <= enY + 60 and enX - 22 <= bulX <= enX + 22 ) or bulY <= 0:
+        if (enY <= bulY <= enY + 60 and enX - 22 <= bulX <= enX + 22):
+            bulState = "ready"
+            bulY = 580
+            score += 1
+            print(score)
+
+        elif bulY <= 0:
             bulState = "ready"
             bulY = 580
 
     player(plyX, plyY)
+    if score == 5:
+        enX = 0
+        enY = 0
+        score = 0
     enemy(enX, enY)
     pygame.display.update()

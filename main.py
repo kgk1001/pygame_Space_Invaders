@@ -1,7 +1,10 @@
+import math
+import random
 import pygame
 
 # initialize pygame
 pygame.init()
+running = True
 
 # create the screen
 screen = pygame.display.set_mode((800, 600))
@@ -18,9 +21,10 @@ plyY = 536
 plyChg = 0
 
 # enemy
+
 enIm = pygame.image.load("alien.png")
-enX = 0
-enY = 0
+enX = random.randint(2,790)
+enY = random.randint(2,250)
 enChgX = 0.2
 enChgY = 0.25
 
@@ -31,14 +35,21 @@ bulY = 580
 bulChgX = 0.2
 bulChgY = 0.511
 bulState = "ready"
+hits = 0
 score = 0
-
 
 def player(x, y):
     screen.blit(plyIm, (x, y))
 
 
-def enemy(x, y):
+def enemy(x, y, s):
+    global hits
+    global enX
+    global enY
+    if hits == 5:
+        enX = random.randint(2, 700)
+        enY = random.randint(2, 250)
+        hits = 0
     screen.blit(enIm, (x, y))
 
 
@@ -49,7 +60,7 @@ def bullet(x, y):
 
 
 # game loop
-running = True
+
 while running:
     screen.fill((80, 80, 150))
 
@@ -87,30 +98,27 @@ while running:
 
     enX += enChgX
     if enX < 0:
-        enChgX = 0.2
+        enChgX = 0.15
         enY += 32
     elif enX > 736:
-        enChgX = -0.2
+        enChgX = -0.15
         enY += 32
     # bullet movement
     if bulState == "fire":
         bullet(bulX, bulY)
         bulY -= bulChgY
-        if (enY <= bulY <= enY + 60 and enX - 22 <= bulX <= enX + 22):
+        dis = (math.sqrt(math.pow((enX - bulX), 2) + math.pow((enY - bulY), 2)))
+        if dis < 20:
             bulState = "ready"
             bulY = 580
+            hits += 1
             score += 1
-            print(score)
+            print(hits)
 
-        elif bulY <= 0:
+        elif bulY <= 1:
             bulState = "ready"
             bulY = 580
 
     player(plyX, plyY)
-    # respawn enemy
-    if score == 5:
-        enX = 0
-        enY = 0
-        score = 0
-    enemy(enX, enY)
+    enemy(enX, enY, hits)
     pygame.display.update()

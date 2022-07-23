@@ -21,7 +21,6 @@ plyY = 536
 plyChg = 0
 
 # enemy
-
 enIm = pygame.image.load("alien.png")
 enX = random.randint(2,790)
 enY = random.randint(2,250)
@@ -113,7 +112,7 @@ while running:
             bulY = 580
             hits += 1
             score += 1
-            print(hits)
+            print(score)
 
         elif bulY <= 1:
             bulState = "ready"
